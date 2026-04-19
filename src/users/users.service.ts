@@ -31,7 +31,7 @@ export class UsersService {
   async findById(id: string): Promise<UserResponseDto | null> {
     const user = await this.usersRepository.findOneBy({ id });
     if (!user) {
-      return null;
+      throw new NotFoundException(`Usuário com id ${id} não existe`);
     }
     return {
       id: user.id,
@@ -41,7 +41,7 @@ export class UsersService {
     };
   }
 
-  async create(user: CreateUserDto): Promise<void> {
+  async create(user: CreateUserDto): Promise<UserResponseDto> {
     const existsUserName = await this.usersRepository.findOneBy({
       name: user.name,
     });
@@ -59,16 +59,31 @@ export class UsersService {
     const passwordHash = bcryptHashSync(user.password, 10);
     user.password = passwordHash;
 
-    await this.usersRepository.save(user);
+    const newUser = await this.usersRepository.save(user);
+
+    return {
+      id: newUser.id,
+      name: newUser.name,
+      email: newUser.email,
+      isActive: newUser.isActive,
+    };
   }
 
-  async update(id: string, user: UpdateUserDto): Promise<void> {
+  async update(id: string, user: UpdateUserDto): Promise<UserResponseDto> {
     const existsUser = await this.usersRepository.findOneBy({ id });
     if (!existsUser) {
       throw new NotFoundException(`Usuário com id ${id} não existe`);
     }
 
     await this.usersRepository.update(id, user);
+    const updatedUser = await this.usersRepository.findOneBy({ id });
+
+    return {
+      id,
+      name: updatedUser?.name || existsUser.name,
+      email: updatedUser?.email || existsUser.email,
+      isActive: updatedUser?.isActive ?? existsUser.isActive,
+    };
   }
 
   async delete(id: string): Promise<void> {
