@@ -28,7 +28,7 @@ export class UsersService {
     }));
   }
 
-  async findById(id: string): Promise<UserResponseDto | null> {
+  async findById(id: string): Promise<UserResponseDto> {
     const user = await this.usersRepository.findOneBy({ id });
     if (!user) {
       throw new NotFoundException(`Usuário com id ${id} não existe`);

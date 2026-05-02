@@ -40,7 +40,7 @@ export class UsersController {
   @Get(':id')
   async findById(
     @Param('id') id: string,
-  ): Promise<ApiResponseDto<UserResponseDto | null>> {
+  ): Promise<ApiResponseDto<UserResponseDto>> {
     const user = await this.usersService.findById(id);
     return {
       message: 'Usuário encontrado com sucesso',
