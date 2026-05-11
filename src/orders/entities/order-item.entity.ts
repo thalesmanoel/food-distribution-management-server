@@ -6,24 +6,16 @@ import {
   JoinColumn,
 } from 'typeorm';
 import { Order } from './order.entity';
-import { TypeDiscount } from '../enums/typeDiscount.enum';
+import { TypeDiscount } from '../enums/type-discount.enum';
 import { Product } from 'src/products/entities/product.entity';
+import { decimalColumn } from 'src/commons/database/columns/decimal.column';
 
 @Entity('order_items')
 export class OrderItem {
   @PrimaryGeneratedColumn('uuid')
   id!: string;
 
-  @Column({
-    type: 'decimal',
-    precision: 10,
-    scale: 2,
-    default: 0,
-    transformer: {
-      to: (value: number) => value,
-      from: (value: string) => Number(value),
-    },
-  })
+  @Column({ ...decimalColumn, default: 0 })
   discount!: number;
 
   @Column({
@@ -39,15 +31,7 @@ export class OrderItem {
   @Column({ type: 'int' })
   quantity!: number;
 
-  @Column({
-    type: 'decimal',
-    precision: 10,
-    scale: 2,
-    transformer: {
-      to: (value: number) => value,
-      from: (value: string) => Number(value),
-    },
-  })
+  @Column(decimalColumn)
   price!: number;
 
   @ManyToOne(() => Product)
