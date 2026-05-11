@@ -7,7 +7,7 @@ import {
   JoinColumn,
   CreateDateColumn,
 } from 'typeorm';
-import { Customer } from 'src/customers/entities/customers.entity';
+import { Customer } from '../../customers/entities/customer.entity';
 import { OrderItem } from './order-item.entity';
 
 @Entity('orders')

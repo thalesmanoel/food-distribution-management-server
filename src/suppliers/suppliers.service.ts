@@ -6,7 +6,7 @@ import {
 import { Repository } from 'typeorm';
 import { InjectRepository } from '@nestjs/typeorm';
 import { CreateSupplierDto } from './dtos/create-supplier.dto';
-import { Supplier } from './entities/suppliers.entity';
+import { Supplier } from './entities/supplier.entity';
 
 @Injectable()
 export class SuppliersService {

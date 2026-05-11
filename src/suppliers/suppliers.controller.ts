@@ -10,7 +10,7 @@ import {
 import { SuppliersService } from './suppliers.service';
 import { CreateSupplierDto } from './dtos/create-supplier.dto';
 import { ApiResponseDto } from 'src/commons/dtos/api-response.dto';
-import { Supplier } from './entities/suppliers.entity';
+import { Supplier } from './entities/supplier.entity';
 
 @Controller('suppliers')
 export class SuppliersController {

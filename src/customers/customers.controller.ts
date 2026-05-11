@@ -10,7 +10,7 @@ import {
 import { CustomersService } from './customers.service';
 import { CreateCustomerDto } from './dtos/create-customer.dto';
 import { ApiResponseDto } from 'src/commons/dtos/api-response.dto';
-import { Customer } from './entities/customers.entity';
+import { Customer } from './entities/customer.entity';
 
 @Controller('customers')
 export class CustomersController {

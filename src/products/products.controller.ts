@@ -10,7 +10,7 @@ import {
 import { ProductsService } from './products.service';
 import { CreateProductDto } from './dtos/create-product.dto';
 import { ApiResponseDto } from 'src/commons/dtos/api-response.dto';
-import { Product } from './entities/products.entity';
+import { Product } from './entities/product.entity';
 
 @Controller('products')
 export class ProductsController {

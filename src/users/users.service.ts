@@ -7,7 +7,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { hashSync as bcryptHashSync } from 'bcrypt';
 import { CreateUserDto } from './dtos/create-user.dto';
-import { User } from './entities/users.entity';
+import { User } from './entities/user.entity';
 import { UserResponseDto } from './dtos/reponse-user.dto';
 import { UpdateUserDto } from './dtos/update-user.dto';
 
