@@ -11,14 +11,15 @@ export class OrderItem extends AppBaseEntity {
   discount!: number;
 
   @Column({
+    name: 'type_discount',
     type: 'enum',
     enum: TypeDiscount,
     default: TypeDiscount.NONE,
   })
-  type_discount!: TypeDiscount;
+  typeDiscount!: TypeDiscount;
 
-  @Column({ type: 'boolean', default: false })
-  is_bonus!: boolean;
+  @Column({ name: 'is_bonus', type: 'boolean', default: false })
+  isBonus!: boolean;
 
   @Column({ type: 'int' })
   quantity!: number;
