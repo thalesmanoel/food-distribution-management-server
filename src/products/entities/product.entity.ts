@@ -1,18 +1,10 @@
+import { AppBaseEntity } from 'src/commons/base/base.entity';
 import { decimalColumn } from 'src/commons/database/columns/decimal.column';
 import { Supplier } from 'src/suppliers/entities/supplier.entity';
-import {
-  Entity,
-  PrimaryGeneratedColumn,
-  Column,
-  ManyToOne,
-  JoinColumn,
-} from 'typeorm';
+import { Entity, Column, ManyToOne, JoinColumn } from 'typeorm';
 
 @Entity('products')
-export class Product {
-  @PrimaryGeneratedColumn('uuid')
-  id!: string;
-
+export class Product extends AppBaseEntity {
   @Column({ type: 'varchar', length: 255 })
   name!: string;
 

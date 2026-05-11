@@ -1,20 +1,12 @@
-import {
-  Entity,
-  PrimaryGeneratedColumn,
-  Column,
-  ManyToOne,
-  JoinColumn,
-} from 'typeorm';
+import { Entity, Column, ManyToOne, JoinColumn } from 'typeorm';
 import { Order } from './order.entity';
 import { TypeDiscount } from '../enums/type-discount.enum';
 import { Product } from 'src/products/entities/product.entity';
 import { decimalColumn } from 'src/commons/database/columns/decimal.column';
+import { AppBaseEntity } from 'src/commons/base/base.entity';
 
 @Entity('order_items')
-export class OrderItem {
-  @PrimaryGeneratedColumn('uuid')
-  id!: string;
-
+export class OrderItem extends AppBaseEntity {
   @Column({ ...decimalColumn, default: 0 })
   discount!: number;
 

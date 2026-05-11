@@ -1,23 +1,13 @@
-import {
-  Entity,
-  PrimaryGeneratedColumn,
-  Column,
-  ManyToOne,
-  OneToMany,
-  JoinColumn,
-  CreateDateColumn,
-} from 'typeorm';
+import { Entity, Column, ManyToOne, OneToMany, JoinColumn } from 'typeorm';
 import { Customer } from '../../customers/entities/customer.entity';
 import { OrderItem } from './order-item.entity';
 import { decimalColumn } from 'src/commons/database/columns/decimal.column';
 import { User } from 'src/users/entities/user.entity';
 import { StatusOrder } from '../enums/status-order.enum';
+import { AppBaseEntity } from 'src/commons/base/base.entity';
 
 @Entity('orders')
-export class Order {
-  @PrimaryGeneratedColumn('uuid')
-  id!: string;
-
+export class Order extends AppBaseEntity {
   @Column(decimalColumn)
   total!: number;
 
@@ -27,9 +17,6 @@ export class Order {
     default: StatusOrder.PENDING,
   })
   status!: StatusOrder;
-
-  @CreateDateColumn()
-  created_at!: Date;
 
   @ManyToOne(() => Customer)
   @JoinColumn({ name: 'customer_id' })

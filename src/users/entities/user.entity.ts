@@ -1,10 +1,8 @@
-import { Entity, PrimaryGeneratedColumn, Column } from 'typeorm';
+import { AppBaseEntity } from 'src/commons/base/base.entity';
+import { Entity, Column } from 'typeorm';
 
 @Entity('users')
-export class User {
-  @PrimaryGeneratedColumn('uuid')
-  id!: string;
-
+export class User extends AppBaseEntity {
   @Column({ type: 'varchar', length: 255 })
   name!: string;
 

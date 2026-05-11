@@ -1,10 +1,8 @@
-import { Entity, PrimaryGeneratedColumn, Column } from 'typeorm';
+import { AppBaseEntity } from 'src/commons/base/base.entity';
+import { Entity, Column } from 'typeorm';
 
 @Entity('suppliers')
-export class Supplier {
-  @PrimaryGeneratedColumn('uuid')
-  id!: string;
-
+export class Supplier extends AppBaseEntity {
   @Column({ type: 'varchar', length: 255 })
   name!: string;
 
@@ -18,7 +16,7 @@ export class Supplier {
   email!: string;
 
   @Column({ type: 'text', nullable: true })
-  description!: string;
+  description?: string;
 
   @Column({ type: 'varchar', length: 255 })
   address!: string;
