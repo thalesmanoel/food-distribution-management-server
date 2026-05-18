@@ -40,8 +40,11 @@ export class OrdersService {
     }, 0);
 
     const order = this.ordersRepository.create({
-      ...data,
+      customer_id: data.customer_id,
+      user_id: data.user_id,
+      status: data.status,
       total,
+      items: data.items,
     });
 
     return this.ordersRepository.save(order);
