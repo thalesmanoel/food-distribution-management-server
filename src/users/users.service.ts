@@ -10,6 +10,9 @@ import { CreateUserDto } from './dtos/create-user.dto';
 import { User } from './entities/user.entity';
 import { UserResponseDto } from './dtos/reponse-user.dto';
 import { UpdateUserDto } from './dtos/update-user.dto';
+import { PaginationQueryDto } from 'src/commons/dtos/pagination-query.dto';
+import { PaginatedResponse } from 'src/commons/interfaces/paginated-response.interface';
+import { paginate } from 'src/commons/utils/paginate.utils';
 
 @Injectable()
 export class UsersService {
@@ -18,14 +21,32 @@ export class UsersService {
     private usersRepository: Repository<User>,
   ) {}
 
-  async findAll(): Promise<UserResponseDto[]> {
-    const users = await this.usersRepository.find();
-    return users.map((user) => ({
-      id: user.id,
-      name: user.name,
-      email: user.email,
-      isActive: user.isActive,
-    }));
+  async findAll(
+    paginationDto: PaginationQueryDto,
+  ): Promise<PaginatedResponse<UserResponseDto>> {
+    const { search, identifier } = paginationDto;
+
+    const queryBuilder = this.usersRepository.createQueryBuilder('user');
+
+    const allowedFilters = ['name', 'email', 'isActive'];
+
+    if (search && identifier && allowedFilters.includes(identifier)) {
+      queryBuilder.andWhere(`user.${identifier} ILIKE :search`, {
+        search: `%${search}%`,
+      });
+    }
+
+    const paginatedUsers = await paginate(queryBuilder, paginationDto);
+
+    return {
+      ...paginatedUsers,
+      data: paginatedUsers.data.map((user) => ({
+        id: user.id,
+        name: user.name,
+        email: user.email,
+        isActive: user.isActive,
+      })),
+    };
   }
 
   async findById(id: string): Promise<UserResponseDto> {
