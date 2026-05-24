@@ -6,12 +6,15 @@ import {
   Param,
   Put,
   Delete,
+  Query,
 } from '@nestjs/common';
 import { UsersService } from './users.service';
 import { CreateUserDto } from './dtos/create-user.dto';
 import { UserResponseDto } from './dtos/reponse-user.dto';
 import { UpdateUserDto } from './dtos/update-user.dto';
 import { ApiResponseDto } from 'src/commons/dtos/api-response.dto';
+import { PaginationQueryDto } from 'src/commons/dtos/pagination-query.dto';
+import { PaginatedResponse } from 'src/commons/interfaces/paginated-response.interface';
 
 @Controller('users')
 export class UsersController {
@@ -29,8 +32,10 @@ export class UsersController {
   }
 
   @Get()
-  async findAll(): Promise<ApiResponseDto<UserResponseDto[]>> {
-    const users = await this.usersService.findAll();
+  async findAll(
+    @Query() paginationDto: PaginationQueryDto,
+  ): Promise<ApiResponseDto<PaginatedResponse<UserResponseDto>>> {
+    const users = await this.usersService.findAll(paginationDto);
     return {
       message: 'Usuários encontrados com sucesso',
       data: users,

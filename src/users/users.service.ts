@@ -21,6 +21,10 @@ export class UsersService {
     private usersRepository: Repository<User>,
   ) {}
 
+  async findByEmailWithPassword(email: string): Promise<User | null> {
+    return this.usersRepository.findOneBy({ email });
+  }
+
   async findAll(
     paginationDto: PaginationQueryDto,
   ): Promise<PaginatedResponse<UserResponseDto>> {
