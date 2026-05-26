@@ -15,11 +15,13 @@ import { UpdateUserDto } from './dtos/update-user.dto';
 import { ApiResponseDto } from 'src/commons/dtos/api-response.dto';
 import { PaginationQueryDto } from 'src/commons/dtos/pagination-query.dto';
 import { PaginatedResponse } from 'src/commons/interfaces/paginated-response.interface';
+import { Public } from 'src/auth/decorators/public.decorator';
 
 @Controller('users')
 export class UsersController {
   constructor(private readonly usersService: UsersService) {}
 
+  @Public()
   @Post()
   async create(
     @Body() body: CreateUserDto,
