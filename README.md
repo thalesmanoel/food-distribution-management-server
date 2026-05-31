@@ -18,7 +18,6 @@ O projeto foi desenvolvido com NestJS, TypeScript, TypeORM e PostgreSQL. A API c
 - [Endpoints](#endpoints)
 - [Paginacao e filtros](#paginacao-e-filtros)
 - [Testes](#testes)
-- [Pontos de atencao](#pontos-de-atencao)
 
 ## Visao geral
 
@@ -620,16 +619,3 @@ npm run test:cov
 
 O projeto possui arquivos `.spec.ts` gerados para controllers e services, alem de um teste e2e em `test/app.e2e-spec.ts`.
 
-## Pontos de atencao
-
-Alguns pontos do codigo atual merecem revisao antes de uso em producao:
-
-- O teste e2e padrao ainda espera `GET /` com `Hello World!`, mas nao ha controller raiz correspondente no estado atual do projeto.
-- O DTO de produto usa `supplierId`, enquanto a entidade e o banco usam `supplier_id`. A camada de service atual nao faz o mapeamento explicito entre esses campos.
-- Alguns campos marcados como opcionais em TypeScript nao possuem `@IsOptional()` nos DTOs. Com o `ValidationPipe` global, isso pode afetar requests que omitirem esses campos.
-- `UpdateUserDto.isActive` esta anotado com `@IsEmail()`, mas o tipo esperado e booleano.
-- O calculo de desconto do pedido nao diferencia desconto percentual de desconto em valor fixo.
-- A criacao de pedidos recebe `customer_id`, `user_id` e `product_id`, mas nao valida explicitamente se esses registros existem antes de salvar.
-- As rotas de listagem de clientes, fornecedores, produtos e pedidos ainda nao usam paginacao.
-- As migrations existentes foram geradas com `$npm_config_name` no nome do arquivo/classe, indicando que o script de nomeacao deve ser revisado no ambiente de desenvolvimento atual.
-- Mensagens de erro e sucesso em alguns arquivos fonte aparecem com acentuacao corrompida, provavelmente por diferenca de encoding.
