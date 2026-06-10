@@ -16,13 +16,40 @@ import { ApiResponseDto } from 'src/commons/dtos/api-response.dto';
 import { PaginationQueryDto } from 'src/commons/dtos/pagination-query.dto';
 import { PaginatedResponse } from 'src/commons/interfaces/paginated-response.interface';
 import { Public } from 'src/auth/decorators/public.decorator';
+import {
+  ApiBearerAuth,
+  ApiOperation,
+  ApiParam,
+  ApiQuery,
+  ApiResponse,
+  ApiTags,
+} from '@nestjs/swagger';
 
+@ApiTags('Users')
 @Controller('users')
 export class UsersController {
   constructor(private readonly usersService: UsersService) {}
 
   @Public()
   @Post()
+  @ApiOperation({
+    summary: 'Criar usuário',
+  })
+  @ApiResponse({
+    status: 201,
+    description: 'Usuário criado com sucesso',
+    schema: {
+      example: {
+        message: 'Usuário criado com sucesso',
+        data: {
+          id: 'd2f18216-cb15-4cfe-8f7b-0cc7a66dbd3a',
+          name: 'João Silva Monteiro',
+          email: 'joao.silva@example.com',
+          isActive: true,
+        },
+      },
+    },
+  })
   async create(
     @Body() body: CreateUserDto,
   ): Promise<ApiResponseDto<UserResponseDto>> {
@@ -34,6 +61,12 @@ export class UsersController {
   }
 
   @Get()
+  @ApiBearerAuth()
+  @ApiQuery({
+    name: 'page',
+    required: false,
+    example: 1,
+  })
   async findAll(
     @Query() paginationDto: PaginationQueryDto,
   ): Promise<ApiResponseDto<PaginatedResponse<UserResponseDto>>> {
@@ -45,6 +78,14 @@ export class UsersController {
   }
 
   @Get(':id')
+  @ApiBearerAuth()
+  @ApiOperation({
+    summary: 'Buscar usuário por ID',
+  })
+  @ApiParam({
+    name: 'id',
+    example: '123',
+  })
   async findById(
     @Param('id') id: string,
   ): Promise<ApiResponseDto<UserResponseDto>> {
@@ -56,6 +97,7 @@ export class UsersController {
   }
 
   @Put(':id')
+  @ApiBearerAuth()
   async update(
     @Param('id') id: string,
     @Body() body: UpdateUserDto,
@@ -68,6 +110,7 @@ export class UsersController {
   }
 
   @Delete(':id')
+  @ApiBearerAuth()
   async delete(@Param('id') id: string): Promise<ApiResponseDto<null>> {
     await this.usersService.delete(id);
     return {
