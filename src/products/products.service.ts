@@ -7,6 +7,7 @@ import { Product } from './entities/product.entity';
 import { Repository } from 'typeorm';
 import { InjectRepository } from '@nestjs/typeorm';
 import { CreateProductDto } from './dtos/create-product.dto';
+import { UpdateProductDto } from './dtos/update-product.dto';
 
 @Injectable()
 export class ProductsService {
@@ -41,7 +42,7 @@ export class ProductsService {
     return this.productsRepository.save(newProduct);
   }
 
-  async update(id: string, product: Partial<Product>): Promise<Product> {
+  async update(id: string, product: UpdateProductDto): Promise<Product> {
     const existingProduct = await this.findById(id);
     if (!existingProduct) {
       throw new NotFoundException('Produto não encontrado');

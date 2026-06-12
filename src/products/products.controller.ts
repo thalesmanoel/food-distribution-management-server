@@ -11,6 +11,7 @@ import { ProductsService } from './products.service';
 import { CreateProductDto } from './dtos/create-product.dto';
 import { ApiResponseDto } from 'src/commons/dtos/api-response.dto';
 import { Product } from './entities/product.entity';
+import { UpdateProductDto } from './dtos/update-product.dto';
 
 @Controller('products')
 export class ProductsController {
@@ -48,7 +49,7 @@ export class ProductsController {
   @Put(':id')
   async update(
     @Param('id') id: string,
-    @Body() body: Partial<Product>,
+    @Body() body: UpdateProductDto,
   ): Promise<ApiResponseDto<Product>> {
     const product = await this.productsService.update(id, body);
     return {
