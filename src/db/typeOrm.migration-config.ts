@@ -7,6 +7,7 @@ import { Order } from '../orders/entities/order.entity';
 import { Product } from '../products/entities/product.entity';
 import { Supplier } from '../suppliers/entities/supplier.entity';
 import { User } from '../users/entities/user.entity';
+import { StockMovement } from '../stock-movements/entities/stock-movement.entity';
 
 import { DataSourceOptions, DataSource } from 'typeorm';
 
@@ -22,7 +23,15 @@ const dataSourceOptions: DataSourceOptions = {
   password: configService.getOrThrow<string>('DB_PASSWORD'),
   database: configService.getOrThrow<string>('DB_NAME'),
   synchronize: false,
-  entities: [User, Product, Customer, Order, OrderItem, Supplier],
+  entities: [
+    User,
+    Product,
+    Customer,
+    Order,
+    OrderItem,
+    Supplier,
+    StockMovement,
+  ],
   migrations: [__dirname + '/migrations/*.ts'],
 };
 
