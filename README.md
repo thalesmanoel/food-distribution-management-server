@@ -549,7 +549,7 @@ Busca usuario sem expor a senha.
 
 #### `PUT /users/:id`
 
-Atualiza usuario. Consulte as inconsistencias atuais do `UpdateUserDto`.
+Atualiza nome, email e/ou status ativo do usuario.
 
 #### `DELETE /users/:id`
 
@@ -830,17 +830,9 @@ Alguns campos marcados com `?` no TypeScript possuem validators, mas nao usam
 `@IsOptional()`. Com o `ValidationPipe` atual, eles podem ser exigidos em
 runtime:
 
-- `CreateUserDto.isActive`
-- `UpdateUserDto.name`, `email` e `isActive`
 - `CreateCustomerDto.description`
 - `CreateSupplierDto.description`
 - `CreateOrderItemDto.discount`, `typeDiscount` e `isBonus`
-
-### Atualizacao de usuario
-
-`UpdateUserDto.isActive` usa `@IsEmail()` apesar de o service e a entidade
-esperarem um boolean. O endpoint `PUT /users/:id` nao consegue atualizar esse
-campo corretamente no estado atual.
 
 ### Produto e fornecedor
 

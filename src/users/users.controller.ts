@@ -1,55 +1,38 @@
 import {
-  Controller,
-  Get,
-  Post,
   Body,
-  Param,
-  Put,
+  Controller,
   Delete,
+  Get,
+  Param,
+  Post,
+  Put,
   Query,
 } from '@nestjs/common';
-import { UsersService } from './users.service';
-import { CreateUserDto } from './dtos/create-user.dto';
-import { UserResponseDto } from './dtos/reponse-user.dto';
-import { UpdateUserDto } from './dtos/update-user.dto';
+import { Public } from 'src/auth/decorators/public.decorator';
 import { ApiResponseDto } from 'src/commons/dtos/api-response.dto';
 import { PaginationQueryDto } from 'src/commons/dtos/pagination-query.dto';
 import { PaginatedResponse } from 'src/commons/interfaces/paginated-response.interface';
-import { Public } from 'src/auth/decorators/public.decorator';
 import {
-  ApiBearerAuth,
-  ApiOperation,
-  ApiParam,
-  ApiQuery,
-  ApiResponse,
-  ApiTags,
-} from '@nestjs/swagger';
+  ApiCreateUser,
+  ApiDeleteUser,
+  ApiFindAllUsers,
+  ApiFindUserById,
+  ApiUpdateUser,
+  ApiUsersController,
+} from './decorators/users-swagger.decorator';
+import { CreateUserDto } from './dtos/create-user.dto';
+import { UserResponseDto } from './dtos/reponse-user.dto';
+import { UpdateUserDto } from './dtos/update-user.dto';
+import { UsersService } from './users.service';
 
-@ApiTags('Users')
+@ApiUsersController()
 @Controller('users')
 export class UsersController {
   constructor(private readonly usersService: UsersService) {}
 
   @Public()
   @Post()
-  @ApiOperation({
-    summary: 'Criar usuário',
-  })
-  @ApiResponse({
-    status: 201,
-    description: 'Usuário criado com sucesso',
-    schema: {
-      example: {
-        message: 'Usuário criado com sucesso',
-        data: {
-          id: 'd2f18216-cb15-4cfe-8f7b-0cc7a66dbd3a',
-          name: 'João Silva Monteiro',
-          email: 'joao.silva@example.com',
-          isActive: true,
-        },
-      },
-    },
-  })
+  @ApiCreateUser()
   async create(
     @Body() body: CreateUserDto,
   ): Promise<ApiResponseDto<UserResponseDto>> {
@@ -61,12 +44,7 @@ export class UsersController {
   }
 
   @Get()
-  @ApiBearerAuth()
-  @ApiQuery({
-    name: 'page',
-    required: false,
-    example: 1,
-  })
+  @ApiFindAllUsers()
   async findAll(
     @Query() paginationDto: PaginationQueryDto,
   ): Promise<ApiResponseDto<PaginatedResponse<UserResponseDto>>> {
@@ -78,14 +56,7 @@ export class UsersController {
   }
 
   @Get(':id')
-  @ApiBearerAuth()
-  @ApiOperation({
-    summary: 'Buscar usuário por ID',
-  })
-  @ApiParam({
-    name: 'id',
-    example: '123',
-  })
+  @ApiFindUserById()
   async findById(
     @Param('id') id: string,
   ): Promise<ApiResponseDto<UserResponseDto>> {
@@ -97,7 +68,7 @@ export class UsersController {
   }
 
   @Put(':id')
-  @ApiBearerAuth()
+  @ApiUpdateUser()
   async update(
     @Param('id') id: string,
     @Body() body: UpdateUserDto,
@@ -110,7 +81,7 @@ export class UsersController {
   }
 
   @Delete(':id')
-  @ApiBearerAuth()
+  @ApiDeleteUser()
   async delete(@Param('id') id: string): Promise<ApiResponseDto<null>> {
     await this.usersService.delete(id);
     return {
