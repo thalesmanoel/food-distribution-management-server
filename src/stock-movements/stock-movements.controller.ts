@@ -25,15 +25,15 @@ export class StockMovementsController {
     @Body() body: CreateStockMovementDto,
     @Req() request: AuthenticatedRequest,
   ): Promise<ApiResponseDto<StockMovement>> {
-    const responsibleUserId = request.user?.sub;
+    const userId = request.user?.sub;
 
-    if (!responsibleUserId) {
+    if (!userId) {
       throw new UnauthorizedException('Usuario autenticado nao encontrado');
     }
 
     const movement = await this.stockMovementsService.create({
       ...body,
-      responsible_user_id: responsibleUserId,
+      responsible_user_id: userId,
     });
 
     return {
