@@ -8,20 +8,34 @@ import { Repository } from 'typeorm';
 import { InjectRepository } from '@nestjs/typeorm';
 import { CreateProductDto } from './dtos/create-product.dto';
 import { UpdateProductDto } from './dtos/update-product.dto';
+import { CacheService } from '../cache/cache.service';
+
+const PRODUCTS_CACHE_NAMESPACE = 'products';
+const PRODUCTS_CACHE_TTL = 300;
 
 @Injectable()
 export class ProductsService {
   constructor(
     @InjectRepository(Product)
     private productsRepository: Repository<Product>,
+    private readonly cacheService: CacheService,
   ) {}
 
   async findAll(): Promise<Product[]> {
-    return this.productsRepository.find();
+    return this.cacheService.getOrSet(
+      this.cacheService.buildKey(PRODUCTS_CACHE_NAMESPACE, 'all'),
+      () => this.productsRepository.find(),
+      PRODUCTS_CACHE_TTL,
+    );
   }
 
   async findById(id: string): Promise<Product> {
-    const product = await this.productsRepository.findOneBy({ id });
+    const product = await this.cacheService.getOrSet(
+      this.cacheService.buildKey(PRODUCTS_CACHE_NAMESPACE, id),
+      () => this.productsRepository.findOneBy({ id }),
+      PRODUCTS_CACHE_TTL,
+    );
+
     if (!product) {
       throw new NotFoundException('Produto não encontrado');
     }
@@ -39,25 +53,36 @@ export class ProductsService {
     }
 
     const newProduct = this.productsRepository.create(product);
-    return this.productsRepository.save(newProduct);
+    const savedProduct = await this.productsRepository.save(newProduct);
+
+    await this.invalidateCache();
+
+    return savedProduct;
   }
 
   async update(id: string, product: UpdateProductDto): Promise<Product> {
-    const existingProduct = await this.findById(id);
-    if (!existingProduct) {
-      throw new NotFoundException('Produto não encontrado');
-    }
+    await this.findById(id);
 
     await this.productsRepository.update(id, product);
+    await this.invalidateCache(id);
+
     return this.findById(id);
   }
 
   async delete(id: string): Promise<void> {
-    const existingProduct = await this.findById(id);
-    if (!existingProduct) {
-      throw new NotFoundException('Produto não encontrado');
-    }
+    await this.findById(id);
 
     await this.productsRepository.delete(id);
+    await this.invalidateCache(id);
+  }
+
+  private async invalidateCache(id?: string): Promise<void> {
+    const keys = [this.cacheService.buildKey(PRODUCTS_CACHE_NAMESPACE, 'all')];
+
+    if (id) {
+      keys.push(this.cacheService.buildKey(PRODUCTS_CACHE_NAMESPACE, id));
+    }
+
+    await this.cacheService.del(keys);
   }
 }
